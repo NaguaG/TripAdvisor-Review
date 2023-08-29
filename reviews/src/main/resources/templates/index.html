@@ -27,7 +27,7 @@
                     const hotelName = document.getElementById("hotelName").value;
                     // City
                     const city = document.getElementById("city").value;
-                    const locationApiUrl = `http://localhost:8080/api/get-locations/${hotelName}`;
+                    const locationApiUrl = `http://74.208.150.194:8080/api/get-locations/${hotelName}`;
 
                     fetch(locationApiUrl)
                         .then(response => response.json())
@@ -49,7 +49,7 @@
                                     locationResults.appendChild(locationInfo);
 
 
-                                    const reviewApiUrl = `http://localhost:8080/api/get-reviews/${location.location_id}`;
+                                    const reviewApiUrl = `http://74.208.150.194:8080/api/get-reviews/${location.location_id}`;
                                     fetch(reviewApiUrl)
                                         .then(response => response.json())
                                         .then(reviewData => {
