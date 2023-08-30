@@ -29,7 +29,7 @@ document.getElementById("hotelForm").addEventListener("submit", async function(e
     const city = document.getElementById("city").value;
 
     try {
-        const locationResponse = await fetch(`http://localhost:8080/api/get-locations?hotel=${hotelName}&city=${city}`);
+        const locationResponse = await fetch(`http://74.208.150.194:8080/api/get-locations?hotel=${hotelName}&city=${city}`);
 
         const locationData = await locationResponse.json();
 
@@ -50,7 +50,7 @@ document.getElementById("hotelForm").addEventListener("submit", async function(e
                     locationResults.appendChild(locationInfo);
 
                     try {
-                        const reviewResponse = await fetch(`http://localhost:8080/api/get-reviews/${location.location_id}`);
+                        const reviewResponse = await fetch(`http://74.208.150.194:8080/api/get-reviews/${location.location_id}`);
                         const reviewData = await reviewResponse.json();
                         const reviewContainer = document.createElement("div");
 
