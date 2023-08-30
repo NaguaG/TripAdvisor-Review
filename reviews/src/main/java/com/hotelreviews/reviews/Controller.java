@@ -20,10 +20,10 @@ public class Controller {
             return "Error occurred";
         }
     }
-    @GetMapping("/get-locations/{hotel}")
-    public String getLocationId(@PathVariable String hotel) {
+    @GetMapping("/get-locations")
+    public String getLocationId(@RequestParam("hotel") String hotel, @RequestParam("city") String city) {
         try {
-            return Service.fetchHotelLocations(hotel);
+            return Service.fetchHotelLocations(hotel, city);
         } catch (IOException e) {
             e.printStackTrace();
             return "Error occurred";
