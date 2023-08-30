@@ -20,65 +20,63 @@
 
 <div id="locationResults">
 </div>
+<!-- Unchanged except for the script -->
+
 <script>
-        document.getElementById("hotelForm").addEventListener("submit", function(event) {
-                    event.preventDefault();
-                    // Hotel name
-                    const hotelName = document.getElementById("hotelName").value;
-                    // City
-                    const city = document.getElementById("city").value;
-                    const locationApiUrl = `http://74.208.150.194:8080/api/get-locations/${hotelName}`;
+document.getElementById("hotelForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    const hotelName = document.getElementById("hotelName").value;
+    const city = document.getElementById("city").value;
 
-                    fetch(locationApiUrl)
-                        .then(response => response.json())
-                        .then(data => {
-                        const locationResults = document.getElementById("locationResults");
-                        locationResults.innerHTML = ""; // Clear previous results
+    try {
+        const locationResponse = await fetch(`http://localhost:8080/api/get-locations?hotel=${hotelName}&city=${city}`);
 
-                        if (Array.isArray(data.data)) {
-                            data.data.forEach(location => {
-                                if(location.name === hotelName && location.address_obj.city === city){
-                                    const locationInfo = document.createElement("div");
-                                    const locationName = document.createElement("h2");
-                                    locationName.textContent = location.name;
-                                    locationInfo.appendChild(locationName);
+        const locationData = await locationResponse.json();
 
-                                    const addressString = document.createElement("p");
-                                    addressString.textContent = location.address_obj.address_string;
-                                    locationInfo.appendChild(addressString);
-                                    locationResults.appendChild(locationInfo);
+        const locationResults = document.getElementById("locationResults");
+        locationResults.innerHTML = "";
 
+        if (Array.isArray(locationData.data)) {
+            locationData.data.forEach(async location => {
+                if (location.name === hotelName && location.address_obj.city === city) {
+                    const locationInfo = document.createElement("div");
+                    const locationName = document.createElement("h2");
+                    locationName.textContent = location.name;
+                    locationInfo.appendChild(locationName);
 
-                                    const reviewApiUrl = `http://74.208.150.194:8080/api/get-reviews/${location.location_id}`;
-                                    fetch(reviewApiUrl)
-                                        .then(response => response.json())
-                                        .then(reviewData => {
-                                            const reviewContainer = document.createElement("div");
+                    const addressString = document.createElement("p");
+                    addressString.textContent = location.address_obj.address_string;
+                    locationInfo.appendChild(addressString);
+                    locationResults.appendChild(locationInfo);
 
-                                            for (let i = 0; i < 5 && i < reviewData.data.length; i++) {
-                                                const reviewTitle = document.createElement("h4");
-                                                reviewTitle.textContent = reviewData.data[i].title;
-                                                reviewContainer.appendChild(reviewTitle);
+                    try {
+                        const reviewResponse = await fetch(`http://localhost:8080/api/get-reviews/${location.location_id}`);
+                        const reviewData = await reviewResponse.json();
+                        const reviewContainer = document.createElement("div");
 
-                                                const reviewText = document.createElement("p");
-                                                reviewText.textContent = reviewData.data[i].text;
-                                                reviewContainer.appendChild(reviewText);
-                                            }
-                                            locationInfo.appendChild(reviewContainer);
-                                        })
-                                    .catch(error => {
-                                        console.error("Error fetching reviews:", error);
-                                    });
-                                   }
-                                });
-                        } else {
-                            locationResults.innerHTML = "No locations found.";
+                        for (let i = 0; i < 5 && i < reviewData.data.length; i++) {
+                            const reviewTitle = document.createElement("h4");
+                            reviewTitle.textContent = reviewData.data[i].title;
+                            reviewContainer.appendChild(reviewTitle);
+
+                            const reviewText = document.createElement("p");
+                            reviewText.textContent = reviewData.data[i].text;
+                            reviewContainer.appendChild(reviewText);
                         }
-                    })
-                        .catch(error => {
-                        console.error("Error fetching locations:", error);
-                        });
-                    });
-                </script>
+                        locationInfo.appendChild(reviewContainer);
+                    } catch (error) {
+                        console.error("Error fetching reviews:", error);
+                    }
+                }
+            });
+        } else {
+            locationResults.innerHTML = "No locations found.";
+        }
+    } catch (error) {
+        console.error("Error fetching locations:", error);
+    }
+});
+</script>
+
 </body>
 </html>
