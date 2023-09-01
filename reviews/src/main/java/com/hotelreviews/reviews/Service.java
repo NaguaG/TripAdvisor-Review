@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 @org.springframework.stereotype.Service
 public class Service {
     private final OkHttpClient client = new OkHttpClient();
-    private final String apiKey = "4CA089B09ABA420997FB374D3B3F1647";
+    private final String apiKey = "EDA87A52AC2B4152A2B38D3FE8200897";
 
     public String fetchHotelReviews(Integer locationId) throws IOException {
         String apiUrl = "https://api.content.tripadvisor.com/api/v1/location/" + locationId + "/reviews?key=" + apiKey + "&language=en";
